@@ -1,0 +1,25 @@
+<resources>
+    <string name="app_name">Reading Corner</string>
+    <string name="tagline">READ • EXPLORE • IMAGINE</string>
+    <string name="loading_library">Loading your library…</string>
+    <string name="welcome_title">Welcome to Reading Corner</string>
+    <string name="welcome_subtitle">Discover stories, knowledge and new worlds.</string>
+    <string name="start_reading">Start Reading</string>
+    <string name="explore_books">Explore Books</string>
+    <string name="already_reading">Already reading with us?</string>
+    <string name="continue_label">Continue</string>
+    <string name="choose_language_title">Choose Your Language</string>
+    <string name="choose_language_subtitle">Select one or more languages</string>
+    <string name="choose_category_title">What would you like to read?</string>
+    <string name="choose_category_subtitle">Select one or more categories</string>
+    <string name="hero_title">Find Your Next Story</string>
+    <string name="hero_subtitle">Explore thousands of books across languages and categories.</string>
+    <string name="search_placeholder">Search books, authors or categories…</string>
+    <string name="no_books_found">No Books Found</string>
+    <string name="try_another">Try another search or category.</string>
+    <string name="data_local_notice">Your progress, favorites and bookmarks are stored on this device only.</string>
+    <string name="private_chats_title">Reading Corner Messages</string>
+    <string name="private_chats_subtitle">Private conversations with other readers.</string>
+    <string name="accounts_local_notice">Accounts stay on this device only.</string>
+    <string name="triple_tap_hint">Tap the screen 3 times to jump back to reading.</string>
+</resources>

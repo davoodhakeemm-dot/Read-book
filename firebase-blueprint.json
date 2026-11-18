@@ -1,0 +1,431 @@
+{
+  "entities": {
+    "UserPublicProfile": {
+      "title": "UserPublicProfile",
+      "description": "Public reader profile for chat discovery and Instagram-style profile header (zero PII).",
+      "type": "object",
+      "properties": {
+        "accountId": {
+          "type": "string",
+          "description": "Unique immutable Reading Corner account ID."
+        },
+        "ownerFirebaseUid": {
+          "type": "string",
+          "description": "Firebase Auth UID of the account creator."
+        },
+        "authorizedFirebaseUids": {
+          "type": "string",
+          "description": "Array (serialized list in Firestore) of authorized Firebase UIDs for this account."
+        },
+        "displayName": {
+          "type": "string",
+          "description": "User-chosen display name (free-form characters)."
+        },
+        "bio": {
+          "type": "string",
+          "description": "Optional user bio."
+        },
+        "dpUrl": {
+          "type": "string",
+          "description": "Optional compressed avatar data URI or URL."
+        },
+        "secretTheme": {
+          "type": "string",
+          "enum": ["INSTAGRAM", "EMERALD", "DARK"],
+          "description": "Saved secret-page theme preference."
+        },
+        "online": {
+          "type": "boolean",
+          "description": "Online presence indicator."
+        },
+        "lastActive": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Last active timestamp (FieldValue.serverTimestamp())."
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Account creation timestamp (FieldValue.serverTimestamp())."
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Last update timestamp (FieldValue.serverTimestamp())."
+        }
+      },
+      "required": [
+        "accountId",
+        "ownerFirebaseUid",
+        "authorizedFirebaseUids",
+        "displayName",
+        "secretTheme",
+        "online",
+        "lastActive",
+        "createdAt",
+        "updatedAt"
+      ]
+    },
+    "UserPrivateAccount": {
+      "title": "UserPrivateAccount",
+      "description": "Owner-only PII and personal NFC link token.",
+      "type": "object",
+      "properties": {
+        "accountId": {
+          "type": "string",
+          "description": "Owning account ID."
+        },
+        "phoneE164": {
+          "type": "string",
+          "description": "Normalized phone number."
+        },
+        "phoneVerified": {
+          "type": "boolean",
+          "description": "Whether phone number was verified via Firebase Phone Auth OTP."
+        },
+        "personalLinkToken": {
+          "type": "string",
+          "description": "High-entropy random secret NFC card token (only readable by account owner)."
+        },
+        "activeTokenHash": {
+          "type": "string",
+          "description": "SHA-256 hex digest of active personalLinkToken, or empty when revoked."
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Creation timestamp (FieldValue.serverTimestamp())."
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Update timestamp (FieldValue.serverTimestamp())."
+        }
+      },
+      "required": [
+        "accountId",
+        "phoneE164",
+        "phoneVerified",
+        "personalLinkToken",
+        "activeTokenHash",
+        "createdAt",
+        "updatedAt"
+      ]
+    },
+    "BlockedUser": {
+      "title": "BlockedUser",
+      "description": "Blocked reader entry enforced in security rules for messaging and calling.",
+      "type": "object",
+      "properties": {
+        "blockedAccountId": {
+          "type": "string",
+          "description": "Blocked user's account ID."
+        },
+        "blockedDisplayName": {
+          "type": "string",
+          "description": "Cached display name of blocked user."
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Timestamp when user was blocked (FieldValue.serverTimestamp())."
+        }
+      },
+      "required": ["blockedAccountId", "blockedDisplayName", "createdAt"]
+    },
+    "PhoneClaim": {
+      "title": "PhoneClaim",
+      "description": "Enforces one account per phone number using hashed phone key (list disabled).",
+      "type": "object",
+      "properties": {
+        "phoneHash": {
+          "type": "string",
+          "description": "SHA-256 hex hash of normalized phone number."
+        },
+        "accountId": {
+          "type": "string",
+          "description": "Linked Reading Corner account ID."
+        },
+        "ownerFirebaseUid": {
+          "type": "string",
+          "description": "Creator Firebase Auth UID."
+        },
+        "passwordSalt": {
+          "type": "string",
+          "description": "Random per-account salt."
+        },
+        "passwordHash": {
+          "type": "string",
+          "description": "PBKDF2-HMAC-SHA256 password digest."
+        },
+        "phoneVerified": {
+          "type": "boolean",
+          "description": "Phone verification status."
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Creation timestamp (FieldValue.serverTimestamp())."
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Update timestamp (FieldValue.serverTimestamp())."
+        }
+      },
+      "required": [
+        "phoneHash",
+        "accountId",
+        "ownerFirebaseUid",
+        "passwordSalt",
+        "passwordHash",
+        "phoneVerified",
+        "createdAt",
+        "updatedAt"
+      ]
+    },
+    "NfcLink": {
+      "title": "NfcLink",
+      "description": "Hashed NFC/personal link resolution record (list disabled).",
+      "type": "object",
+      "properties": {
+        "tokenHash": {
+          "type": "string",
+          "description": "SHA-256 hex hash of personal NFC link token."
+        },
+        "accountId": {
+          "type": "string",
+          "description": "Owning account ID."
+        },
+        "ownerFirebaseUid": {
+          "type": "string",
+          "description": "Owner Firebase Auth UID."
+        },
+        "revoked": {
+          "type": "boolean",
+          "description": "True when lost card link was revoked."
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Creation timestamp (FieldValue.serverTimestamp())."
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Update timestamp (FieldValue.serverTimestamp())."
+        }
+      },
+      "required": ["tokenHash", "accountId", "ownerFirebaseUid", "revoked", "createdAt", "updatedAt"]
+    },
+    "ConversationThread": {
+      "title": "ConversationThread",
+      "description": "Two-participant conversation metadata for inbox listing.",
+      "type": "object",
+      "properties": {
+        "memberAccountIds": {
+          "type": "string",
+          "description": "Array of 2 participating accountIds."
+        },
+        "memberFirebaseUids": {
+          "type": "string",
+          "description": "Array of participating Firebase Auth UIDs."
+        },
+        "lastMessageText": {
+          "type": "string",
+          "description": "Latest message preview."
+        },
+        "lastSenderAccountId": {
+          "type": "string",
+          "description": "Account ID of last sender."
+        },
+        "lastMessageAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Timestamp of latest message (FieldValue.serverTimestamp())."
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Thread creation timestamp (FieldValue.serverTimestamp())."
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Thread update timestamp (FieldValue.serverTimestamp())."
+        }
+      },
+      "required": [
+        "memberAccountIds",
+        "memberFirebaseUids",
+        "lastMessageText",
+        "lastSenderAccountId",
+        "lastMessageAt",
+        "createdAt",
+        "updatedAt"
+      ]
+    },
+    "ChatMessageDoc": {
+      "title": "ChatMessageDoc",
+      "description": "Real-time message document with read receipts and backend blocking checks.",
+      "type": "object",
+      "properties": {
+        "threadId": {
+          "type": "string",
+          "description": "Canonical sorted conversation ID."
+        },
+        "senderAccountId": {
+          "type": "string",
+          "description": "Sender account ID."
+        },
+        "recipientAccountId": {
+          "type": "string",
+          "description": "Recipient account ID."
+        },
+        "senderFirebaseUid": {
+          "type": "string",
+          "description": "Firebase Auth UID of sender."
+        },
+        "memberFirebaseUids": {
+          "type": "string",
+          "description": "Array of participating Firebase UIDs."
+        },
+        "text": {
+          "type": "string",
+          "description": "Message body."
+        },
+        "mediaDataUri": {
+          "type": "string",
+          "description": "Optional embedded compressed media data URI (image/video/audio)."
+        },
+        "mediaKind": {
+          "type": "string",
+          "enum": ["IMAGE", "VIDEO", "AUDIO"],
+          "description": "Optional media kind."
+        },
+        "seen": {
+          "type": "boolean",
+          "description": "Read receipt status."
+        },
+        "seenAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Timestamp when recipient read the message."
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Send timestamp (FieldValue.serverTimestamp())."
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Update timestamp (FieldValue.serverTimestamp())."
+        }
+      },
+      "required": [
+        "threadId",
+        "senderAccountId",
+        "recipientAccountId",
+        "senderFirebaseUid",
+        "memberFirebaseUids",
+        "text",
+        "seen",
+        "createdAt",
+        "updatedAt"
+      ]
+    },
+    "CallSignalDoc": {
+      "title": "CallSignalDoc",
+      "description": "Audio/video call signaling document blocked on backend if either participant blocked the other.",
+      "type": "object",
+      "properties": {
+        "threadId": {
+          "type": "string",
+          "description": "Canonical conversation ID."
+        },
+        "senderAccountId": {
+          "type": "string",
+          "description": "Caller account ID."
+        },
+        "recipientAccountId": {
+          "type": "string",
+          "description": "Callee account ID."
+        },
+        "senderFirebaseUid": {
+          "type": "string",
+          "description": "Caller Firebase Auth UID."
+        },
+        "memberFirebaseUids": {
+          "type": "string",
+          "description": "Array of participating Firebase UIDs."
+        },
+        "callType": {
+          "type": "string",
+          "enum": ["AUDIO", "VIDEO"],
+          "description": "Type of call."
+        },
+        "status": {
+          "type": "string",
+          "enum": ["RINGING", "ACCEPTED", "DECLINED", "ENDED"],
+          "description": "Call signaling state."
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Call initiation timestamp (FieldValue.serverTimestamp())."
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Update timestamp (FieldValue.serverTimestamp())."
+        }
+      },
+      "required": [
+        "threadId",
+        "senderAccountId",
+        "recipientAccountId",
+        "senderFirebaseUid",
+        "memberFirebaseUids",
+        "callType",
+        "status",
+        "createdAt",
+        "updatedAt"
+      ]
+    }
+  },
+  "firestore": {
+    "/users/{accountId}": {
+      "schema": { "$ref": "#/entities/UserPublicProfile" },
+      "description": "Public reader profiles for chat discovery."
+    },
+    "/users/{accountId}/private/{docId}": {
+      "schema": { "$ref": "#/entities/UserPrivateAccount" },
+      "description": "Owner-only PII and NFC personal link token."
+    },
+    "/users/{accountId}/blocked/{blockedAccountId}": {
+      "schema": { "$ref": "#/entities/BlockedUser" },
+      "description": "Blocked user records per account."
+    },
+    "/phone_claims/{phoneHash}": {
+      "schema": { "$ref": "#/entities/PhoneClaim" },
+      "description": "Unique phone number to account claim registry."
+    },
+    "/nfc_links/{tokenHash}": {
+      "schema": { "$ref": "#/entities/NfcLink" },
+      "description": "Hashed NFC link token registry."
+    },
+    "/conversations/{threadId}": {
+      "schema": { "$ref": "#/entities/ConversationThread" },
+      "description": "Conversation thread metadata."
+    },
+    "/conversations/{threadId}/messages/{messageId}": {
+      "schema": { "$ref": "#/entities/ChatMessageDoc" },
+      "description": "Messages inside a conversation thread."
+    },
+    "/conversations/{threadId}/calls/{callId}": {
+      "schema": { "$ref": "#/entities/CallSignalDoc" },
+      "description": "Call signaling records inside a conversation thread."
+    }
+  }
+}
